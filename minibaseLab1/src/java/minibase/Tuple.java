@@ -24,16 +24,21 @@ public class Tuple implements Serializable {
      *            the schema of this tuple. It must be a valid TupleDesc
      *            instance with at least one field.
      */
-    public Tuple(TupleDesc td) {
-        // TODO: some code goes here
+    public Tuple(TupleDesc td) {;
+    	assert(td.numFields() > 0);
+    	tupleDesc = td;
+        fieldVal = new ArrayList<Field>();
+        int numFields = td.numFields();
+        for(int i = 0; i < numFields; i++){
+            fieldVal.add(null);
+        }
     }
 
     /**
      * @return The TupleDesc representing the schema of this tuple.
      */
     public TupleDesc getTupleDesc() {
-        // TODO: some code goes here
-        return null;
+        return tupleDesc;
     }
 
     /**
@@ -64,7 +69,9 @@ public class Tuple implements Serializable {
      *            new value for the field.
      */
     public void setField(int i, Field f) {
-        // TODO: some code goes here
+        //if(i >= 0 && i < fieldVal.size()){
+            fieldVal.set(i, f);
+     //   } else throw new ArrayIndexOutOfBoundsException();
     }
 
     /**
@@ -74,8 +81,9 @@ public class Tuple implements Serializable {
      *            field index to return. Must be a valid index.
      */
     public Field getField(int i) {
-        // TODO: some code goes here
-        return null;
+        if(i >= 0 && i < fieldVal.size()){
+            return fieldVal.get(i);
+        } else throw new ArrayIndexOutOfBoundsException();
     }
 
     /**
@@ -87,8 +95,13 @@ public class Tuple implements Serializable {
      * where \t is any whitespace, except newline, and \n is a newline
      */
     public String toString() {
-        // TODO: some code goes here
-        throw new UnsupportedOperationException("Implement this");
+        StringBuffer sb = new StringBuffer();
+        int n = fieldVal.size()-1;
+    	for (int i = 0; i < n; i++){
+    		sb.append(fieldVal.get(i) + "\t");
+    	}
+    	sb.append(fieldVal.get(fieldVal.size()-1) + "\n");
+    	return sb.toString();
     }
     
     /**
@@ -97,7 +110,6 @@ public class Tuple implements Serializable {
      * */
     public Iterator<Field> fields()
     {
-        // some code goes here
-        return null;
+        return fieldVal.iterator();
     }
 }

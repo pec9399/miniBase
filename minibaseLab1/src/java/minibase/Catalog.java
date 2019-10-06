@@ -19,6 +19,27 @@ public class Catalog {
     // TODO
     // hint1 : catalog class manages entire table info (DBFile dbFile, String name, String pkeyField), it will be easy if you manage thow infos in one class
     // hint2 : you need to get table info using table ID and you need to get table ID using table name. What data structure do you need?
+    private class Table {
+        public Table(String name, DbFile dbfile, String pkeyField) {
+            this.Name = name;
+            this.File = dbfile;
+            this.PkeyField = pkeyField;
+        }
+        public DbFile getDbFile() {
+            return this.File;
+        }
+        public String getPkeyField() {
+            return this.PkeyField;
+        }
+        public String getName() {
+            return this.Name;
+        }
+        private String Name;
+        private DbFile File;        
+        private String PkeyField;
+    }
+    private HashMap<String,Table> NameHash;
+    private HashMap<Integer,Table> IdHash;
 
     /**
      * Constructor.
@@ -26,6 +47,8 @@ public class Catalog {
      */
     public Catalog() {
         // TODO: some code goes here
+        this.NameHash = new HashMap<String,Table>();
+        this.IdHash = new HashMap<Integer,Table>();
     }
 
     /**
@@ -38,7 +61,9 @@ public class Catalog {
      * conflict exists, use the last table to be added as the table for a given name.
      */
     public void addTable(DbFile file, String name, String pkeyField) {
-        // TODO: some code goes here
+        Table data = new Table(name,file,pkeyField);
+        this.NameHash.put(name, data);
+        this.IdHash.put(file.getId(),data);
     }
 
     public void addTable(DbFile file, String name) {
@@ -61,8 +86,15 @@ public class Catalog {
      * @throws NoSuchElementException if the table doesn't exist
      */
     public int getTableId(String name) throws NoSuchElementException {
-        // TODO: some code goes here
-        return 0;
+        //get table from hashmap
+        Table t = this.NameHash.get(name);
+
+        if (t == null) {
+            throw new NoSuchElementException();
+        } else {
+            DbFile file = t.getDbFile();
+            return file.getId();
+        }
     }
 
     /**
@@ -72,8 +104,15 @@ public class Catalog {
      * @throws NoSuchElementException if the table doesn't exist
      */
     public TupleDesc getTupleDesc(int tableid) throws NoSuchElementException {
-        // TODO: some code goes here
-        return null;
+        //get table from hashmap
+        Table t = this.IdHash.get(tableid);
+        
+        if (t == null) {
+            throw new NoSuchElementException();
+        } else {
+            DbFile file = t.getDbFile();
+            return file.getTupleDesc();
+        }
     }
 
     /**
@@ -83,28 +122,48 @@ public class Catalog {
      *     function passed to addTable
      */
     public DbFile getDbFile(int tableid) throws NoSuchElementException {
-        // TODO: some code goes here
-        return null;
+       //get table from hashmap
+       Table t = this.IdHash.get(tableid);
+        
+       if (t == null) {
+           throw new NoSuchElementException();
+       } else {
+           DbFile file = t.getDbFile();
+           return file;
+       }
     }
 
     public String getPrimaryKey(int tableid) {
-        // TODO: some code goes here
-        return null;
+        //get table from hashmap
+        Table t = this.IdHash.get(tableid);
+        
+        if (t == null) {
+            throw new NoSuchElementException();
+        } else {
+            return t.getPkeyField();
+        }
     }
 
     public Iterator<Integer> tableIdIterator() {
-        // TODO: some code goes here
-        return null;
+        Set<Integer> keys = this.IdHash.keySet();
+        return keys.iterator();
     }
 
     public String getTableName(int id) {
-        // TODO: some code goes here
-        return null;
+         //get table from hashmap
+         Table t = this.IdHash.get(id);
+        
+         if (t == null) {
+             throw new NoSuchElementException();
+         } else {
+             return t.getName();
+         }
     }
     
     /** Delete all tables from the catalog */
     public void clear() {
-        // TODO: some code goes here
+        this.IdHash.clear();
+        this.NameHash.clear();
     }
     
     /**
