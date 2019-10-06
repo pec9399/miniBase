@@ -46,7 +46,7 @@ public class Tuple implements Serializable {
      *         be null.
      */
     public RecordId getRecordId() {
-        // some code goes here
+        // TODO: some code goes here
         return null;
     }
 
@@ -57,7 +57,7 @@ public class Tuple implements Serializable {
      *            the new RecordId for this tuple.
      */
     public void setRecordId(RecordId rid) {
-        // some code goes here
+        // TODO: some code goes here
     }
 
     /**
