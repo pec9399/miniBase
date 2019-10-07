@@ -1,6 +1,7 @@
 package minibase;
 
 import java.io.*;
+import java.util.HashMap;
 
 /**
  * BufferPool manages the reading and writing of pages into memory from
@@ -22,7 +23,8 @@ public class BufferPool {
 
     // TODO : define instance variable
     // hint!! we need to match pid and page, So that we need additional data structure.
-
+    private HashMap<PageId, Page> cache;
+    private int maxPages;
     /**
      * Creates a BufferPool that caches up to numPages pages.
      *
@@ -30,6 +32,8 @@ public class BufferPool {
      */
     public BufferPool(int numPages) {
         // TODO: some code goes here
+        this.maxPages = numPages;
+        this.cache = new HashMap<PageId, Page>();
     }
 
     /**
@@ -50,8 +54,15 @@ public class BufferPool {
     public  Page getPage(TransactionId tid, PageId pid, Permissions perm)
         throws TransactionAbortedException, DbException {
         // TODO: some code goes here
-	// hint, reture value can't be null as if there is no matching page, we will add new page to the buffer pool.
-        return null;
+    // hint, reture value can't be null as if there is no matching page, we will add new page to the buffer pool.
+        if (cache.containsKey(pid)) {
+            return cache.get(pid);
+        } else {
+            DbFile db = Database.getCatalog().getDbFile(pid.getTableId());
+            Page p = db.readPage(pid);
+            cache.put(pid, p);
+            return p;
+        }
 
 	// + you don't need to implement eviction function for this lab
     }

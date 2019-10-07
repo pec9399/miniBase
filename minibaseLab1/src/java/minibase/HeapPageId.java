@@ -2,7 +2,8 @@ package minibase;
 
 /** Unique identifier for HeapPage objects. */
 public class HeapPageId implements PageId {
-
+    private Integer tableId;
+	private Integer pgNo;
     /**
      * Constructor. Create a page id structure for a specific page of a
      * specific table.
@@ -12,12 +13,14 @@ public class HeapPageId implements PageId {
      */
     public HeapPageId(int tableId, int pgNo) {
         // TODO: some code goes here
+        this.tableId = tableId;
+        this.pgNo = pgNo;
     }
 
     /** @return the table associated with this PageId */
     public int getTableId() {
         // TODO: some code goes here
-        return 0;
+        return this.tableId;
     }
 
     /**
@@ -26,7 +29,7 @@ public class HeapPageId implements PageId {
      */
     public int pageNumber() {
         // TODO: some code goes here
-        return 0;
+        return this.pgNo;
     }
 
     /**
@@ -36,8 +39,8 @@ public class HeapPageId implements PageId {
      * @see BufferPool
      */
     public int hashCode() {
-        // TODO: some code goes here, implement freeley
-        throw new UnsupportedOperationException("implement this");
+        // TODO: some code goes here, implement freely
+        return (tableId.toString() + pgNo.toString()).hashCode();
     }
 
     /**
@@ -49,7 +52,10 @@ public class HeapPageId implements PageId {
      */
     public boolean equals(Object o) {
         // TODO: some code goes here
-        return false;
+        if (o instanceof PageId){
+	    	PageId p = (PageId) o;
+	    	return this.getTableId() == p.getTableId() && this.pageNumber() == p.pageNumber();
+    	} else return false;
     }
 
     /**
